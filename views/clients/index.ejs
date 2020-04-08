@@ -1,0 +1,45 @@
+<%- include('../layout/header') %> 
+    <div class="row mt-5">
+        <div class="col-md-3">
+            <!-- Button trigger modal -->
+            <a name="newClient" id="newClient" class="btn btn-primary" href="/client/create/" role="button">New Client</a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <table class="table table-hover table-inverse table-responsive">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>FirstName</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Entreprise</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <% if (clients) { %>
+                            <% for(let client of clients) { %>
+                                <tr>
+                                    <td><%= client.id %> </td>
+                                    <td><%= client.name %> </td>
+                                    <td><%= client.firstname %> </td>
+                                    <td><%= client.email %></td>
+                                    <td><%= client.contact %> </td>
+                                    <td><%= client.Entreprise.name %> </td>
+                                    <td><%= (client.status) ? 'actif' : 'inactif' %> </td>
+                                    <td>
+                                        <a href="/client/<%= client.id %>" class="btn btn-primary">Edit</a>
+                                        <a href="/client/<%= client.id %>" class="btn btn-danger">Delete</a>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+<%- include('../layout/footer') %> 
