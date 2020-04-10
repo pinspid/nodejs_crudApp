@@ -1,48 +1,66 @@
 <%- include('../layout/header') %>
 
-    <div class="row m-auto">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-md-8 m-auto">
             <div class="card">
-                <div class="card-header">
-                    Add New Client
+                <div class="card-header bg-primary">
+                    <h3 class="text-light text-uppercase text-center">Add New Client</h3>
                 </div>
                 <div class="card-body">
                     <form action="/client/" method="post">
-                        <div class="form-group">
-                          <label for="name">Name</label>
-                          <input type="text" name="name" id="name" class="form-control" placeholder="Your name">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                  <label for="name">Name</label>
+                                  <input type="text" name="name" id="name" class="form-control" placeholder="Your name">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="firstname">firstname</label>
+                                    <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Your fisrtname">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="firstname">firstname</label>
-                            <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Your fisrtname">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="text" name="email" id="email" class="form-control" placeholder="Your Email">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="contact">Contact</label>
+                                    <input type="text" name="contact" id="contact" class="form-control" placeholder="Your contact">
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" name="email" id="email" class="form-control" placeholder="Your Email">
-                        </div>
-                        <div class="form-group">
-                            <label for="contact">Contact</label>
-                            <input type="text" name="contact" id="contact" class="form-control" placeholder="Your contact">
-                        </div>
-                        <div class="form-group">
-                            <label for="entrepriseId">Entreprise</label>
-                            <select class="form-control" name="entrepriseId" id="entrepriseId">
-                                <% if (entreprises) { %>
-                                    <% for( let entreprise of entreprises) { %>
-                                        <option value="<%= entreprise.id %>"><%= entreprise.name %> </option>
-                                    <% } %> 
-                                <% } %>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="entrepriseId">Status</label>
-                            <select class="form-control" name="status" id="status">
-                                <option value="1">Actif</option>
-                                <option value="0">Inactif</option>
-                            </select>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="entrepriseId">Entreprise</label>
+                                    <select class="form-control" name="entrepriseId" id="entrepriseId">
+                                        <% if (entreprises) { %>
+                                            <% for( let entreprise of entreprises) { %>
+                                                <option value="<%= entreprise.id %>"><%= entreprise.name %> </option>
+                                            <% } %> 
+                                        <% } %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="entrepriseId">Status</label>
+                                    <select class="form-control" name="status" id="status">
+                                        <option value="1">Actif</option>
+                                        <option value="0">Inactif</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <br>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
                     </form>
                 </div>
             </div>

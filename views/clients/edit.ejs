@@ -1,0 +1,70 @@
+<%- include('../layout/header') %>
+
+    <div class="row">
+        <div class="col-md-8 m-auto">
+            <div class="card">
+                <div class="card-header bg-primary">
+                    <h3 class="text-light text-uppercase text-center">Update Client <%= data_client.name %></h3>
+                </div>
+                <div class="card-body">
+                    <% if (data_client) { %>
+                        <form accept-charset="UTF-8" action="/client/<%= data_client.id %>?_method=PUT" method="POST">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                      <label for="name">Name</label>
+                                      <input type="text" value="<%= data_client.name %>" name="name" id="name" class="form-control" placeholder="Your name">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="firstname">firstname</label>
+                                        <input type="text" value="<%= data_client.firstname %>" name="firstname" id="firstname" class="form-control" placeholder="Your fisrtname">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="text" value="<%= data_client.email %>" name="email" id="email" class="form-control" placeholder="Your Email">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="contact">Contact</label>
+                                        <input type="text" value="<%= data_client.contact %>" name="contact" id="contact" class="form-control" placeholder="Your contact">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="entrepriseId">Entreprise</label>
+                                        <select class="form-control" name="entrepriseId" id="entrepriseId">
+                                            <% for (const entreprise of entreprises) {  %>
+                                                <option value="<%= entreprise.id %>" <%= (data_client.Entreprise.id === entreprise.id) ? 'selected' : ''  %> ><%= entreprise.name %></option>
+                                            <% } %>
+                                        </select>             
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="entrepriseId">Status</label>
+                                        <select class="form-control" name="status" id="status">
+                                            <option value="1" <%= (data_client.statut == true) ? 'selected' : '' %> >Actif</option>
+                                            <option value="0" <%= (data_client.statut == false) ? 'selected' : '' %> >Inactif</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <button type="submit" class="btn btn-primary btn-block">Upgrade</button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<%- include('../layout/footer') %> 

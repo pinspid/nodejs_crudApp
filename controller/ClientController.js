@@ -1,3 +1,4 @@
+'use strict';
 let asyncLib = require('async');
 let models = require('../models');
 
@@ -13,62 +14,76 @@ module.exports = {
         let entrepriseId = req.body.entrepriseId;
         let status = req.body.status;
 
-        console.log(req.body);
+        let error = 0
 
         if(name == null || firstname== null || email == null || contact == null){
-            return res.status(400).json({'error': 'missing parameters'});
+            error = error + 1;
+            req.flash('error', 'missing parameters');
+            res.redirect('/client/create');
         }
 
 
         if(!EMAIL_REGEX.test(email)){
-            return res.status(400).json({'error': 'the email fields must  be a valid address email'});
+            error = error + 1;
+            req.flash('error', 'the email fields must  be a valid address email');
+            res.redirect('/client/create');
         }
 
+        if(error === 0){
+            models.Client.findOne({
+                attributes: ['email'],
+                where:{
+                    email:email
+                }
+            }).then(clientFound => {
+                if(!clientFound){
+                    models.Client.create({
+                        name: name,
+                        firstname: firstname,
+                        email: email,
+                        contact: contact,
+                        EntrepriseId: entrepriseId,
+                        status: status
+                    }).then(newClient => {
+                        req.flash('success', 'client save with succes');
+                        res.redirect('/client');
+                    }).catch(err => {
+                        return res.status(500).json(err);
+                    });
+                }else{
+                    return req.flash('error', 'Client already exist');
+                }
+            }).catch(err => {
+                return res.status(500).json({'error': 'cannot find client'});
+            });
+        }
+    },
+    edit: (req, res) => {
+        let id = req.params.id;
+        if(id !== null) {
 
-        models.Client.findOne({
-            attributes: ['email'],
-            where:{
-                email:email
-            }
-        }).then(clientFound => {
-            if(!clientFound){
-                models.Client.create({
-                    name: name,
-                    firstname: firstname,
-                    email: email,
-                    contact: contact,
-                    EntrepriseId: entrepriseId,
-                    status: status
-                }).then(newClient => {
-                    res.redirect('/client', 200);
-                }).catch(err => {
-                    return res.status(500).json(err);
-                });
-            }else{
-                return res.status(409).json({'error': 'Client already exist'});
-            }
-        }).catch(err => {
-            return res.status(500).json({'error': 'cannot find client'});
-        });
+            models.Client.findOne({
+                where:{
+                    id: id
+                },
+                include: [{
+                    model: models.Entreprise,
+                    attributes: ['id','name']
+                }]
+            }).then(clientFound => {
+                if(clientFound){
+                    models.Entreprise.findAll({}).then((entreprises) => {
+                        res.render('clients/edit', {data_client: clientFound,entreprises: entreprises, put:true});
+                    }).catch(err => {
+                        res.json(err);
+                    });
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     },
     create: (req, res) => {
-
-        // let id = req.params.id;
-
-        // if(id !== null) {
-        //     models.Client.findOne({
-        //         where:{
-        //             id: id
-        //         }
-        //     }).then(clientFound => {
-        //         if(clientFound){
-        //             res.render('clients/create', {client: clientFound});
-        //         }
-        //     }).catch(err => {
-        //         console.log(err);
-        //     });
-        // }
-
         models.Entreprise.findAll({}).then((entreprises) => {
             res.render('clients/create', {entreprises: entreprises});
         }).catch(err => {
@@ -98,56 +113,78 @@ module.exports = {
         let contact = req.body.contact;
         let entrepriseId = req.body.EntrepriseId;
         let status = req.body.status;
+
+        let error = 0;
         
         if(name == null || firstname== null || email == null || contact == null){
+            error++;
             return res.status(400).json({'error': 'missing parameters'});
         }
 
 
         if(!EMAIL_REGEX.test(email)){
+            error++;
             return res.status(400).json({'error': 'the email fields must  be a valid address email'});
         }
-
-        models.Client.findOne({
-            where:{
-                id:req.params.id
-            }
-        }).then(clientFound => {
-            if(!clientFound){
-                models.Client.update({
-                    name: name,
-                    firstname: firstname,
-                    email: email,
-                    contact: contact,
-                    EntrepriseId: entrepriseId,
-                    status: status
-                }).then(newClient => {
-                    return res.status(201).json({'success': 'Client add with success'});
-                }).catch(err => {
-                    return res.status(500).json(err);
-                });
-            }else{
-                return res.status(200).json(clientFound);
-            }
-        }).catch(err => {
-            return res.status(500).json({'error': 'cannot find client'});
-        });
+        if(error === 0){
+            models.Client.findOne({
+                where:{
+                    id:req.params.id
+                }
+            }).then(clientFound => {
+                if(!clientFound){
+                    return res.json({'error': 'client not exist in DB'});
+                }else{
+                    clientFound.update({
+                        name: name,
+                        firstname: firstname,
+                        email: email,
+                        contact: contact,
+                        EntrepriseId: entrepriseId,
+                        status: status
+                    }).then(newClient => {
+                        req.flash('success', 'Client updated with success');
+                        res.redirect('/client/');
+                    }).catch(err => {
+                        return res.json(err);
+                    });
+                }
+            }).catch(err => {
+                return res.json(err);
+            });
+        }
     },
     destroy: (req, res) => {
         let id = req.params.id;
-        models.Client.findOne({
-            where:{
-                id: id
+        asyncLib.waterfall([
+            done => {
+                models.Client.findOne({
+                    where: {
+                        id: id
+                    }
+                }).then(client => {
+                    done(null,client);
+                }).catch(err => {
+                    res.json(err);
+                });
+            },
+            (client, done) => {
+                if(client) {
+                    client.destroy().then(deleteOk => {
+                        done(deleteOk);
+                    }).catch(err => {
+                        res.json(err);
+                    });
+                }
             }
-        }).then(clientFound => {
-            if(clientFound){
-                clientFound.destroy();
+        ],deleteOk => {
+            if(deleteOk){
+                req.flash('success', 'client delete succesefuly');
+                res.redirect('/client/');
+            }else {
+                req.flash('error', 'failed to delete client');
                 res.redirect('/client');
-            }else{
-                res.status(200).json({'error': 'Client not found'});
             }
-        }).catch(err => {
-            console.log(err);
         });
     }
 };

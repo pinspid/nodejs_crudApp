@@ -1,13 +1,16 @@
 <%- include('../layout/header') %> 
-    <div class="row mt-5">
+    <div class="row">
+        <div class="col md-9">
+            <h3>Clients List</h3>
+        </div>
         <div class="col-md-3">
-            <!-- Button trigger modal -->
             <a name="newClient" id="newClient" class="btn btn-primary" href="/client/create/" role="button">New Client</a>
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <table class="table table-hover table-inverse table-responsive">
+    <hr>
+    <div class="row mt-5">
+        <div class="col-md-12 m-auto">
+            <table class="table table-hover table-inverse">
                 <thead class="thead-inverse">
                     <tr>
                         <th>ID</th>
@@ -17,7 +20,7 @@
                         <th>Contact</th>
                         <th>Entreprise</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -32,8 +35,12 @@
                                     <td><%= client.Entreprise.name %> </td>
                                     <td><%= (client.status) ? 'actif' : 'inactif' %> </td>
                                     <td>
-                                        <a href="/client/<%= client.id %>" class="btn btn-primary">Edit</a>
-                                        <a href="/client/<%= client.id %>" class="btn btn-danger">Delete</a>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="/client/<%= client.id %>/edit" class="btn btn-primary">Edit</a>
+                                            <form action="/client/<%= client.id %>?_method=DELETE" method="post">
+                                                <button class="btn btn-danger" type="submit">Delete</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <% } %>

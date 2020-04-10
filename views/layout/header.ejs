@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client</title>
+    <title>Crud app</title>
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <style>
         .container{
@@ -29,5 +29,14 @@
         </div>
     </nav>
     <div class="container">
-
+        <% if (locals.flash && locals.flash.error){ %>
+            <div class="alert alert-danger">
+                <%= flash.error %>
+            </div>
+        <%}%>
+        <% if (locals.flash && locals.flash.success){ %>
+            <div class="alert alert-success">
+                <%= flash.success %>
+            </div>
+        <%}%>
     
