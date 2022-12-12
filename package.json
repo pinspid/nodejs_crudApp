@@ -15,7 +15,7 @@
     "bootstrap": "^4.4.1",
     "build-url": "^2.0.0",
     "ejs": "^3.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.0",
     "jquery": "^3.5.0",
     "lara-validator": "^2.1.3",
